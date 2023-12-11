@@ -18,7 +18,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from store.models import Product, SiteConfig, Testimonial, Transaction
+from store.models import Product, SiteConfig, Testimonial, Transaction, GiftCard
 
 
 @admin.register(Product)
@@ -78,3 +78,9 @@ class SiteConfigAdmin(admin.ModelAdmin):
             },
         ),
     )
+
+@admin.register(GiftCard)
+class GiftCardAdmin(admin.ModelAdmin):
+    list_display = ('card_code', 'product', 'is_active', 'expiration_date')
+    list_filter = ('is_active', 'expiration_date')
+    search_fields = ('card_code', 'product__name')

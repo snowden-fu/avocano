@@ -20,6 +20,8 @@ from decimal import Decimal
 from colorfield.fields import ColorField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
+from datetime import datetime, date, timedelta
 
 
 class Product(models.Model):
@@ -29,7 +31,7 @@ class Product(models.Model):
     price = models.DecimalField(decimal_places=2, max_digits=10)
     active = models.BooleanField()
     discount_percent = models.IntegerField()
-    inventory_count = models.IntegerField()
+    # inventory_count = models.IntegerField()
 
     @property
     def discount_saving(self):
@@ -38,6 +40,12 @@ class Product(models.Model):
     @property
     def discount_price(self):
         return "{0:.2f}".format(self.price - self.discount_saving)
+    @property
+    def inventory_count(self):
+        return self.calculate_inventory()
+    
+    def calculate_inventory(self):
+        return self.giftcards.filter(is_active=True, expiration_date__gte=timezone.now()).count()
 
     def __str__(self):
         return self.name
@@ -109,3 +117,19 @@ class SiteConfig(models.Model):
             qs.update(active=False)
 
         super(SiteConfig, self).save(*args, **kwargs)
+
+class GiftCard(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='giftcards')
+    card_code = models.CharField(max_length=20, unique=True)
+    is_active = models.BooleanField(default=True)
+    expiration_date = models.DateField(default=date.today() + timedelta(days=365))
+
+    def __str__(self):
+        return f"{self.product.name} - {self.card_code}"
+
+    @property
+    def is_expired(self):
+        return datetime.date.today() > self.expiration_date
+
+    class Meta:
+        verbose_name_plural = "GiftCards"
