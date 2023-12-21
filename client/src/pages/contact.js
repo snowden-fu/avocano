@@ -25,11 +25,10 @@ export class Contact extends LitElement {
       <div class="contactContainer">
         <h1>Contact</h1>
         <div class="contactWrapper">
-          This website was deployed from sample code in the
-          <a href="https://github.com/GoogleCloudPlatform/avocano"
-            >GoogleCloudPlatform/avocano</a
-          >
-          repo on GitHub.
+          if you have any questions, please contact us at
+          <a href="mailto:
+            ${"support@giftcardx.com.au"}"
+            >${"support@giftcardx.com.au"}</a >
         </div>
       </div>
     `;
