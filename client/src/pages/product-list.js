@@ -16,6 +16,7 @@ import { LitElement, html } from 'lit';
 import { navigator } from '../vendor/lit-element-router-2.0.3a/lit-element-router.js';
 import { getProductList } from '../utils/fetch.js';
 import styles from './styles/product.js';
+import '../components/search-bar.js';
 
 const noimage = new URL('../../assets/noimage.png', import.meta.url).href;
 
@@ -52,6 +53,7 @@ export class ProductList extends navigator(LitElement) {
     return html`
       <div class="productContainer">
         <h1 class="productTitle">Product List</h1>
+        <search-bar></search-bar>
         <div class="productWrapper">
           ${this.state.status === 'loading'
             ? html`<p>loading...</p>`
